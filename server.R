@@ -1,11 +1,14 @@
 library(shiny)
 library(maps)
 library(geosphere)
+library(maptools)
+library(raster)
+
 source("helpers.R")
 
 shinyServer(function(input, output, session) {
   vals = reactiveValues()
-  
+
   map_name = reactive({
     tolower(input$map_name)
   })
@@ -19,6 +22,8 @@ shinyServer(function(input, output, session) {
       return(all_cities)
     } else if (map_name() == "usa") {
       return(usa_cities)
+    } else if (map_name() == "switzerland") {
+      return(swiss_cities)
     }
   })
   
@@ -49,6 +54,9 @@ shinyServer(function(input, output, session) {
         cty = generate_random_cities(n=20, min_dist=500)
       } else if (map_name() == "usa") {
         cty = generate_random_cities(n=20, min_dist=50, usa_only=TRUE)
+      } else if (map_name() == "switzerland") {
+        cty = generate_random_cities(n=20, min_dist=50, usa_only=FALSE, 
+                                     switzerland_only = TRUE)
       }
       
       cty$n = 1:nrow(cty)
