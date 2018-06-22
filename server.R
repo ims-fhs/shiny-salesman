@@ -55,7 +55,7 @@ shinyServer(function(input, output, session) {
       } else if (map_name() == "usa") {
         cty = generate_random_cities(n=20, min_dist=50, usa_only=TRUE)
       } else if (map_name() == "switzerland") {
-        cty = generate_random_cities(n=20, min_dist=50, usa_only=FALSE, 
+        cty = generate_random_cities(n=20, min_dist=5, usa_only=FALSE, 
                                      switzerland_only = TRUE)
       }
       
@@ -164,12 +164,12 @@ shinyServer(function(input, output, session) {
     plot_tour(vals$cities, vals$tour, vals$great_circles, map_name=tolower(input$map_name), label_cities=input$label_cities)
     
     if (length(vals$tour) > 1) {
-      pretty_dist = prettyNum(vals$tour_distance, big.mark=",", digits=0, scientific=FALSE)
-      pretty_iter = prettyNum(vals$iter, big.mark=",", digits=0, scientific=FALSE)
+      pretty_dist = prettyNum(vals$tour_distance * 1.60934, big.mark=".", digits=0, scientific=FALSE)
+      pretty_iter = prettyNum(vals$iter, big.mark=".", digits=0, scientific=FALSE)
       pretty_temp = prettyNum(current_temperature(vals$iter, vals$s_curve_amplitude, vals$s_curve_center, vals$s_curve_width),
-                              big.mark=",", digits=0, scientific=FALSE)
+                              big.mark=".", digits=0, scientific=FALSE)
       
-      plot_title = paste0("Distance: ", pretty_dist, " miles\n",
+      plot_title = paste0("Distance: ", pretty_dist, " km\n",
                           "Iterations: ", pretty_iter, "\n",
                           "Temperature: ", pretty_temp)
                           

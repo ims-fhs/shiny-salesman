@@ -1,5 +1,4 @@
 miles_per_meter = 100 / 2.54 / 12 / 5280
-
 adm_switzerland = getData("GADM", country="CHE", level=1)
 
 if (!exists("all_cities")) all_cities = readRDS("data/cities.rds")
@@ -62,7 +61,7 @@ plot_tour = function(cities, tour, great_circles, map_name="world", label_cities
   if (length(tour) > 1) {
     closed_tour = c(tour, tour[1])
     keys = apply(embed(closed_tour, 2), 1, function(row) paste(sort(row), collapse="_"))
-    invisible(sapply(great_circles[keys], lines, lwd=0.8))
+    invisible(sapply(great_circles[keys], lines, lwd=0.8, col="blue"))
   }
 }
 
@@ -133,35 +132,7 @@ ensure_between = function(num, min_allowed, max_allowed) {
   max(min(num, max_allowed), min_allowed)
 }
 
-seed_cities = c(
-  "Buenos Aires, Argentina",
-  "Sydney, Australia",
-  "Rio de Janeiro, Brazil",
-  "Montreal, Canada",
-  "Beijing, China",
-  "Moroni, Comoros",
-  "Cairo, Egypt",
-  "Paris, France",
-  "Athens, Greece",
-  "Budapest, Hungary",
-  "Reykjavik, Iceland",
-  "Delhi, India",
-  "Baghdad, Iraq",
-  "Rome, Italy",
-  "Tokyo, Japan",
-  "Bamako, Mali",
-  "Mexico City, Mexico",
-  "Kathmandu, Nepal",
-  "Oslo, Norway",
-  "Port Moresby, Papua New Guinea",
-  "Lima, Peru",
-  "Kigali, Rwanda",
-  "San Marino, San Marino",
-  "Singapore, Singapore",
-  "Moscow, Russia",
-  "Colombo, Sri Lanka",
-  "Bangkok, Thailand",
-  "Istanbul, Turkey",
-  "London, UK",
-  "New York, USA"
-)
+# seed_cities = c(
+#   "Appenzell (AI)",
+#   "Liestal (BL)"
+# )
