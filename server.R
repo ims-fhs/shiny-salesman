@@ -18,17 +18,17 @@ shinyServer(function(input, output, session) {
   })
   
   city_choices = reactive({
-    if (map_name() == "world") {
+    if (map_name() == "welt") {
       return(all_cities)
     } else if (map_name() == "usa") {
       return(usa_cities)
-    } else if (map_name() == "switzerland") {
+    } else if (map_name() == "schweiz") {
       return(swiss_cities)
     }
   })
   
   update_allowed_cities = observe({
-    if (isolate(input$go_button) == 0 & isolate(set_random_cities()) == 0 & map_name() == "world") return()
+    if (isolate(input$go_button) == 0 & isolate(set_random_cities()) == 0 & map_name() == "welt") return()
     
     updateSelectizeInput(session, "cities", choices=city_choices()$full.name)
   }, priority=500)
@@ -46,15 +46,15 @@ shinyServer(function(input, output, session) {
   }, priority=1000)
   
   set_cities_randomly = observe({
-    if (set_random_cities() == 0 & map_name() == "world") return()
+    if (set_random_cities() == 0 & map_name() == "welt") return()
     run_annealing_process$suspend()
     
     isolate({
-      if (map_name() == "world") {
+      if (map_name() == "welt") {
         cty = generate_random_cities(n=20, min_dist=500)
       } else if (map_name() == "usa") {
         cty = generate_random_cities(n=20, min_dist=50, usa_only=TRUE)
-      } else if (map_name() == "switzerland") {
+      } else if (map_name() == "schweiz") {
         cty = generate_random_cities(n=20, min_dist=5, usa_only=FALSE, 
                                      switzerland_only = TRUE)
       }
@@ -79,7 +79,7 @@ shinyServer(function(input, output, session) {
   }, priority=50)
   
   set_dist_matrix_and_great_circles = observe({
-    if (input$go_button == 0 & set_random_cities() == 0 & map_name() == "world") return()
+    if (input$go_button == 0 & set_random_cities() == 0 & map_name() == "welt") return()
     
     isolate({
       if (nrow(vals$cities) < 2) return()
@@ -164,14 +164,14 @@ shinyServer(function(input, output, session) {
     plot_tour(vals$cities, vals$tour, vals$great_circles, map_name=tolower(input$map_name), label_cities=input$label_cities)
     
     if (length(vals$tour) > 1) {
-      pretty_dist = prettyNum(vals$tour_distance * 1.60934, big.mark=".", digits=0, scientific=FALSE)
-      pretty_iter = prettyNum(vals$iter, big.mark=".", digits=0, scientific=FALSE)
+      pretty_dist = prettyNum(vals$tour_distance * 1.60934, big.mark="'", digits=0, scientific=FALSE)
+      pretty_iter = prettyNum(vals$iter, big.mark="'", digits=0, scientific=FALSE)
       pretty_temp = prettyNum(current_temperature(vals$iter, vals$s_curve_amplitude, vals$s_curve_center, vals$s_curve_width),
-                              big.mark=".", digits=0, scientific=FALSE)
+                              big.mark="'", digits=0, scientific=FALSE)
       
-      plot_title = paste0("Distance: ", pretty_dist, " km\n",
-                          "Iterations: ", pretty_iter, "\n",
-                          "Temperature: ", pretty_temp)
+      plot_title = paste0("Entfernung: ", pretty_dist, " km\n",
+                          "Iterationen: ", pretty_iter, "\n",
+                          "Temperatur: ", pretty_temp)
                           
       title(plot_title)
     }
@@ -180,7 +180,7 @@ shinyServer(function(input, output, session) {
   output$annealing_schedule = renderPlot({
     xvals = seq(from=0, to=vals$total_iterations, length.out=100)
     yvals = current_temperature(xvals, vals$s_curve_amplitude, vals$s_curve_center, vals$s_curve_width)
-    plot(xvals, yvals, type='l', xlab="iterations", ylab="temperature", main="Annealing Schedule")
+    plot(xvals, yvals, type='l', xlab="iterations", ylab="temperature", main="Zeitplan des Annealings")
     points(vals$iter, current_temperature(vals$iter, vals$s_curve_amplitude, vals$s_curve_center, vals$s_curve_width), pch=19, col='red')
   }, height=260)
   
@@ -189,7 +189,7 @@ shinyServer(function(input, output, session) {
     
     xvals = vals$plot_every_iterations * (1:vals$number_of_loops)
     plot(xvals, vals$distances, type='o', pch=19, cex=0.7, 
-         ylim=c(0, max(vals$distances, na.rm=TRUE)), xlab="iterations", ylab="current tour distance",
+         ylim=c(0, max(vals$distances, na.rm=TRUE)), xlab="iterationen", ylab="aktuelle Entfernung",
          main="Evolution of Current Tour Distance")
   }, height=260)
   
